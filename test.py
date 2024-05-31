@@ -1,1 +1,1 @@
-print "Eureka!"
+print ("Eureka!")
