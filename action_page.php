@@ -6,9 +6,9 @@
     
 <p>Something is happening</p>
 <?php
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $lon = $_POST['lon'];
-        $lat = $_POST['lat'];
+    if ($_SERVER["REQUEST_METHOD"] == "GET") {
+        $lon = $_GET['lon'];
+        $lat = $_GET['lat'];
     
         echo "<p>Longitude is: $lon</p><br>";
         echo "<p>Latitude is: $lat</p>";
