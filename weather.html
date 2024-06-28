@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather Form</title>
+</head>
+<body>
+
+<p>Something is happening</p>
+
+<form id="weatherForm">
+    <label for="lon">Longitude:</label>
+    <input type="text" id="lon" name="lon" required><br><br>
+    <label for="lat">Latitude:</label>
+    <input type="text" id="lat" name="lat" required><br><br>
+    <input type="submit" value="Submit">
+</form>
+
+<div id="weatherData"></div>
+
+<script>
+document.getElementById('weatherForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the form from submitting the traditional way
+
+    const lon = document.getElementById('lon').value;
+    const lat = document.getElementById('lat').value;
+
+    console.log(`Longitude is: ${lon}`);
+    console.log(`Latitude is: ${lat}`);
+
+    const url = `https://api.weather.gov/gridpoints/TOP/${lat},${lon}/forecast`;
+
+    console.log(`Link is: ${url}`);
+  
+});
+</script>
+
+</body>
+</html>
