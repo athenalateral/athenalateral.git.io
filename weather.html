@@ -20,9 +20,10 @@
 <script>
 document.getElementById('weatherForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent the form from submitting the traditional way
-
+    
     const lon = document.getElementById('lon').value;
     const lat = document.getElementById('lat').value;
+
 
     console.log(`Longitude is: ${lon}`);
     console.log(`Latitude is: ${lat}`);
@@ -31,11 +32,15 @@ document.getElementById('weatherForm').addEventListener('submit', function(event
 
     console.log(`Link is: ${url}`);
 
-    <p id="data"></p>
-
-    document.getElementById("data").innerHTML = lat + ", " + lon;
+    
+                                                        
 });
 </script>
 
+<p id="data"></p>
+<script>
+    document.getElementById("data").innerHTML = lat + ", " lon;
+</script>
+    
 </body>
 </html>
