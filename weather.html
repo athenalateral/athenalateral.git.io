@@ -31,8 +31,9 @@ document.getElementById('weatherForm').addEventListener('submit', function(event
 
     console.log(`Link is: ${url}`);
 
-    document.write(lon)
-    document.write(lat)
+    <p id="data"></p>
+
+    document.getElementById("data").innerHTML = lat + ", " + lon;
 });
 </script>
 
