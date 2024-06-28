@@ -1,4 +1,5 @@
 <!--Weather form request-->
+<p>Something is happening</p>
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $lon = $_POST["lon"];
