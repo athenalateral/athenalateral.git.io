@@ -44,8 +44,21 @@ document.getElementById('weatherForm').addEventListener('submit', function(event
 
             for (let i = 0; i < 14; ++i) {
                 weatherDataDiv.innerHTML += ` 
-                    <p>Period ${i + 1}: ${data.properties.periods[i].name}</p>
-                    <p>Temperature: ${data.properties.periods[i].temperature}°F</p><br>
+                    <table>
+                    <tr>
+                        <th>Day</th>
+                        <th>Temperature</th>
+                        <th>Wind speed</th>
+                        <th>Wind direction</th>
+                    </tr>
+                    <tr>
+                        <td>${data.properties.periods[i].name}</td>
+                        <td>${data.properties.periods[i].temperature}°F</td>
+                        <td>${data.properties.periods[i].windSpeed}</td>
+                        <td>${data.properties.periods[i].windDirection}</td>
+                    </tr>
+                    
+                    </table><br>
                 `; // appends text, lists period, lists temperature
             }
 
