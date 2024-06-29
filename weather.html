@@ -37,10 +37,19 @@ document.getElementById('weatherForm').addEventListener('submit', function(event
         .then(data => {
             // Display the data (customize based on your API response structure)
             const weatherDataDiv = document.getElementById('weatherData');
+            // ------------------------------------------------------------------
+            weatherDataDiv.innerHTML = `<h2>Weather Data:</h2>`;
+            
+            for (let i = 0; i < 13; ++i) {
+            
             weatherDataDiv.innerHTML = `
-                <h2>Weather Data:</h2>
-                <p>Temperature: ${data.main.temperature}°F</p>
+                
+                <p>Temperature: ${data.periods.temperature}°F</p><br>
+                
             `;
+
+            }
+            // ------------------------------------------------------------------
         })
                                                         
 });
