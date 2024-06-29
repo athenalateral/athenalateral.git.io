@@ -52,7 +52,7 @@ document.getElementById('weatherForm').addEventListener('submit', function(event
                         <th>Wind direction</th>
                     </tr>
                     <tr>
-                        <td>${data.properties.periods[i].name} <img src="${data.properties.icon[i]}" alt="weather icon"></td>
+                        <td>${data.properties.periods[i].name} <img src="${data.properties.periods[i].icon}" alt="weather icon"></td>
                         <td>${data.properties.periods[i].temperature}°F</td>
                         <td>${data.properties.periods[i].windSpeed}</td>
                         <td>${data.properties.periods[i].windDirection}</td>
