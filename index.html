@@ -1,234 +1,532 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!--
+	Dimension by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+	
 <html>
-<head>
-<title>W3.CSS Template</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto'>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style>
-html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif}
-</style>
-</head>
-<body class="w3-light-grey">
+	
+	<head>
+		<title>Dimension by HTML5 UP</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
 
-<!-- Page Container -->
-<div class="w3-content w3-margin-top" style="max-width:1400px;">
+		<!-- Wrapper -->
+			<div id="wrapper">
 
-  <!-- The Grid -->
-  <div class="w3-row-padding">
-  
-    <!-- Left Column -->
-    <div class="w3-third">
-    
-      <div class="w3-white w3-text-grey w3-card-4">
-        <div class="w3-display-container">
-          <img src="https://cdn.discordapp.com/attachments/191403883518492672/1255663023872409701/image.jpg?ex=667df2d1&is=667ca151&hm=5774ce266b9868412c58288c2d0844d90974e98f8c74c98fdce1cfe68cf7e8f3&" style="width:100%" alt="Avatar">
-          <div class="w3-display-bottomleft w3-container w3-text-black">
-            <h2>Ethan Lemieux</h2>
-          </div>
-        </div>
-        <div class="w3-container">
-          <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large w3-text-teal"></i>Student</p>
-          <p><i class="fa fa-home fa-fw w3-margin-right w3-large w3-text-teal"></i>SIUE</p>
-          <p><i class="fa fa-envelope fa-fw w3-margin-right w3-large w3-text-teal"></i>elemieu@siue.edu</p>
-          <p><i class="fa fa-phone fa-fw w3-margin-right w3-large w3-text-teal"></i>not telling :)</p>
-          <hr>
+				<!-- Header -->
+					<header id="header">
+						<div class="logo">
+							<span class="icon fa-gem"></span>
+						</div>
+						<div class="content">
+							<div class="inner">
+								<h1>Weather Tracker</h1>
+								<p>Please input a <strong>Latitude</strong> and <strong>Longitude</strong> in the boxes below</p>
+								
+								<div class="w3-container">
+									<div class="w3-padding">
+										<form id="weatherForm">
+											<label for="lon">Latitude</label>
+											<input type="text" id="lat" name="lat" style="margin-left:45%; width:60px;" required><br>
+											<label for="lat">Longitude</label>
+											<input type="text" id="lon" name="lon" style="margin-left:45%; width:60px;" required><br>
+											<input type="submit" value="Submit">
+										</form>
 
-          <p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-teal"></i>Skills</b></p>
-          <p>IT</p>
-          <div class="w3-light-grey w3-round-xlarge w3-small">
-            <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:90%">90%</div>
-          </div>
-          <p>Coding</p>
-          <div class="w3-light-grey w3-round-xlarge w3-small">
-            <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:80%">
-              <div class="w3-center w3-text-white">80%</div>
-            </div>
-          </div>
-          <p>Writing</p>
-          <div class="w3-light-grey w3-round-xlarge w3-small">
-            <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:75%">80%</div>
-          </div>
-          <p>Music Production</p>
-          <div class="w3-light-grey w3-round-xlarge w3-small">
-            <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:50%">75%</div>
-          </div>
-          <br>
+										<h1>Upload and Parse JSON File</h1>
+										<input type="file" id="fileInput" accept=".json">
+									</div>
+								</div>
+								
+								<!-- json file upload of weather api, displays in weatherDiv -->
+								<script>
 
-          <p class="w3-large w3-text-theme"><b><i class="fa fa-globe fa-fw w3-margin-right w3-text-teal"></i>Languages</b></p>
-          <p>C++</p>
-          <div class="w3-light-grey w3-round-xlarge">
-            <div class="w3-round-xlarge w3-teal" style="height:24px;width:100%"></div>
-          </div>
-          <p>Python</p>
-          <div class="w3-light-grey w3-round-xlarge">
-            <div class="w3-round-xlarge w3-teal" style="height:24px;width:55%"></div>
-          </div>
-          <p>SQL</p>
-          <div class="w3-light-grey w3-round-xlarge">
-            <div class="w3-round-xlarge w3-teal" style="height:24px;width:25%"></div>
-          </div>
-          <br>
-        </div>
+									let rawjson; //global variable defined to use in download button
 
 
+									document.getElementById('fileInput').addEventListener('change', function(event) {
+										const file = event.target.files[0];
+										if (file && file.type === "application/json") {
+											const reader = new FileReader();
+											reader.onload = function(e) {
+												try {
+													const json = JSON.parse(e.target.result);
+													//document.getElementById('jsonOutput').textContent = JSON.stringify(json, null, 2);  //PURE JSON STRING
+								
+													const weatherDataDiv = document.getElementById('weatherData');
+								
+													// Limit the loop to the lesser of 14 or the length of periods array
+													const maxPeriods = Math.min(14, json.properties.periods.length);
+													
+													weatherDataDiv.innerHTML = `
+													<h2>Weather Data</h2>
+													`;
+
+													rawjson = JSON.stringify(json, null, 2);
+													for (let i = 0; i < 14; ++i) {
+														weatherDataDiv.innerHTML += `
+														<div class="table-wrapper">							
+															<table>
+																<thead>
+																	<tr>
+																		<th>Day</th>
+																		<th>Temperature</th>
+																		<th>Wind speed</th>
+																		<th>Wind direction</th>																
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td>${json.properties.periods[i].name}</td>
+																		<td>${json.properties.periods[i].temperature}°F</td>
+																		<td>${json.properties.periods[i].windSpeed}</td>
+																		<td>${json.properties.periods[i].windDirection}</td>
+																	</tr>
+																<tbody>														
+															</table>
+														</div>
+														`;
+													}
+												} catch (error) {
+													console.error("Error parsing JSON:", error);
+												}
+											};
+											reader.readAsText(file);
+										} else {
+											alert("Please upload a valid JSON file.");
+										}
+									});
+								</script>
+
+
+								<!--Form submision that takes the lat and lon and uses the weather api to produce a table-->
+								<script>
 
 
 
 
+									document.getElementById('weatherForm').addEventListener('submit', function(event) {
+										event.preventDefault(); // Prevent the form from submitting the traditional way
+										
+										const lon = document.getElementById('lon').value;
+										const lat = document.getElementById('lat').value;							
+										const url = `https://api.weather.gov/gridpoints/TOP/${lat},${lon}/forecast`;															
+										fetch(url)
+											.then(response => response.json())
+											.then(json => {
+
+												rawjson = JSON.stringify(json, null, 2); //variable with all json to hopefully be able to download
+												const weatherDataDiv = document.getElementById('weatherData');
+												weatherDataDiv.innerHTML = `
+												<h2>Weather Data</h2>
+												<hr />
+												<h6>Latitude: ${lat} longitude: ${lon}</h6>	
+												<hr />`; // Clear any existing content	
+												
+												
+												for (let i = 0; i < 14; ++i) {
+													weatherDataDiv.innerHTML += `
+													
+														<div class="table-wrapper">							
+															<table>
+																<thead>
+																	<tr>
+																		<th>Day</th>
+																		<th>Temperature</th>
+																		<th>Wind speed</th>
+																		<th>Wind direction</th>																
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td>${json.properties.periods[i].name}</td>
+																		<td>${json.properties.periods[i].temperature}°F</td>
+																		<td>${json.properties.periods[i].windSpeed}</td>
+																		<td>${json.properties.periods[i].windDirection}</td>
+																	</tr>
+																<tbody>														
+															</table>
+														</div>
+
+													`; // appends text, lists period, lists temperature
+												}		
+											})																							
+									});
+									</script>
+							</div>
+							<div class="w3-container">
+								<div id="weatherData"></div>
+							</div>
+							<div class="align-left">
+								<pre id="jsonOutput"></pre>
+							</div>
+						</div>
+						<nav>
+							<ul>
+								<li><button id="downloadBtn" class="button icon solid fa-download">Download JSON</button></li>
+								<!--<li><a href="#elements">Elements</a></li>-->
+							</ul>
+						</nav>
+					</header>
+
+						
+
+
+					<script>
+						document.getElementById('downloadBtn').addEventListener('click', function () {
+							// rawjson
+							if (rawjson != null){
+								var jsonString = rawjson;
+								
+								// Convert the string to a Blob. Blob is a immutable string of text not typically recognized by javascript
+								var blob = new Blob([jsonString], { type: 'application/json' });
+								
+								// Create a link element
+								var link = document.createElement('a');
+								
+								// Set the download attribute with a filename
+								link.download = 'data.json';
+								
+								// Create a URL for the Blob and set it as the href attribute
+								link.href = window.URL.createObjectURL(blob);
+								
+								// Append the link to the body
+								document.body.appendChild(link);
+								
+								// Programmatically click the link to trigger the download
+								link.click();
+								
+								// Remove the link from the document
+								document.body.removeChild(link);
+							}
+						});
+					</script>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Weather -->
+							<article id="weather">
+								<h2 class="major">Weather</h2>
+								<span class="image main"><img src="images/pic01.jpg" alt="" /></span>
+								
+							</article>
 
 
 
+						<!-- Work -->
+							<article id="work">
+								<h2 class="major">Work</h2>
+								<span class="image main"><img src="images/pic02.jpg" alt="" /></span>
+								<p>Adipiscing magna sed dolor elit. Praesent eleifend dignissim arcu, at eleifend sapien imperdiet ac. Aliquam erat volutpat. Praesent urna nisi, fringila lorem et vehicula lacinia quam. Integer sollicitudin mauris nec lorem luctus ultrices.</p>
+								<p>Nullam et orci eu lorem consequat tincidunt vivamus et sagittis libero. Mauris aliquet magna magna sed nunc rhoncus pharetra. Pellentesque condimentum sem. In efficitur ligula tate urna. Maecenas laoreet massa vel lacinia pellentesque lorem ipsum dolor. Nullam et orci eu lorem consequat tincidunt. Vivamus et sagittis libero. Mauris aliquet magna magna sed nunc rhoncus amet feugiat tempus.</p>
+							</article>
 
+						<!-- About -->
+							<article id="about">
+								<h2 class="major">About</h2>
+								<span class="image main"><img src="images/pic03.jpg" alt="" /></span>
+								<p>Lorem ipsum dolor sit amet, consectetur et adipiscing elit. Praesent eleifend dignissim arcu, at eleifend sapien imperdiet ac. Aliquam erat volutpat. Praesent urna nisi, fringila lorem et vehicula lacinia quam. Integer sollicitudin mauris nec lorem luctus ultrices. Aliquam libero et malesuada fames ac ante ipsum primis in faucibus. Cras viverra ligula sit amet ex mollis mattis lorem ipsum dolor sit amet.</p>
+							</article>
 
+						<!-- Contact -->
+							<article id="contact">
+								<h2 class="major">Contact</h2>
+								<form method="post" action="#">
+									<div class="fields">
+										<div class="field half">
+											<label for="name">Name</label>
+											<input type="text" name="name" id="name" />
+										</div>
+										<div class="field half">
+											<label for="email">Email</label>
+											<input type="text" name="email" id="email" />
+										</div>
+										<div class="field">
+											<label for="message">Message</label>
+											<textarea name="message" id="message" rows="4"></textarea>
+										</div>
+									</div>
+									<ul class="actions">
+										<li><input type="submit" value="Send Message" class="primary" /></li>
+										<li><input type="reset" value="Reset" /></li>
+									</ul>
+								</form>
+								<ul class="icons">
+									<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+									<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+									<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+									<li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+								</ul>
+							</article>
 
+						<!-- Elements -->
+							<article id="elements">
+								<h2 class="major">Elements</h2>
 
+								<section>
+									<h3 class="major">Text</h3>
+									<p>This is <b>bold</b> and this is <strong>strong</strong>. This is <i>italic</i> and this is <em>emphasized</em>.
+									This is <sup>superscript</sup> text and this is <sub>subscript</sub> text.
+									This is <u>underlined</u> and this is code: <code>for (;;) { ... }</code>. Finally, <a href="#">this is a link</a>.</p>
+									<hr />
+									<h2>Heading Level 2</h2>
+									<h3>Heading Level 3</h3>
+									<h4>Heading Level 4</h4>
+									<h5>Heading Level 5</h5>
+									<h6>Heading Level 6</h6>
+									<hr />
+									<h4>Blockquote</h4>
+									<blockquote>Fringilla nisl. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan faucibus. Vestibulum ante ipsum primis in faucibus lorem ipsum dolor sit amet nullam adipiscing eu felis.</blockquote>
+									<h4>Preformatted</h4>
+									<pre><code>i = 0;
 
+while (!deck.isInOrder()) {
+    print 'Iteration ' + i;
+    deck.shuffle();
+    i++;
+}
 
-        
-      </div><br>
+print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
+								</section>
 
-    <!-- End Left Column -->
-    </div>
+								<section>
+									<h3 class="major">Lists</h3>
 
-    <!-- Right Column -->
-    <div class="w3-twothird">
-    
-      <div class="w3-container w3-card w3-white w3-margin-bottom">
-        <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-suitcase fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Work Experience</h2>
-        <div class="w3-container">
-          <h5 class="w3-opacity"><b>Anderson Hospital Explorers' Program</b></h5>
-          <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Jan 2023 - <span class="w3-tag w3-teal w3-round">Current</span></h6>
-          <p>Volunteered for a unique program that introduced students to varying medical fields. Learned stitching, applying casts, administering, bandaging, maternity procedures, and emergency airlift proceedures.</p>
-          <hr>
-        </div>
-        <div class="w3-container">
-          <h5 class="w3-opacity"><b>High School / Tech Support Internship</b></h5>
-          <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Aug 2020 - May 2021</h6>
-          <p>Selected by a panel of teachers and approved by the Principal for the Technical Support Internship. Provided hardware and sofware repairs to student/teacher computers. Trained hardware installation and repair of Chromebooks and HP laptops for underclassmen. Supervised 8-9 students and assigned work roles.</p>
-          <hr>
-        </div>
-        <div class="w3-container">
-          <h5 class="w3-opacity"><b>High School / Tutor</b></h5>
-          <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Aug 2018 - May 2021</h6>
-          <p>Reffered by teachers to tutor eight students struggling with Math and Geography. Additionally, volunteered to tutor Math and Art to ten special education students.</p><br>
-        </div>
-      </div>
+									<h4>Unordered</h4>
+									<ul>
+										<li>Dolor pulvinar etiam.</li>
+										<li>Sagittis adipiscing.</li>
+										<li>Felis enim feugiat.</li>
+									</ul>
 
-      <!--End Work Experience grid-->
+									<h4>Alternate</h4>
+									<ul class="alt">
+										<li>Dolor pulvinar etiam.</li>
+										<li>Sagittis adipiscing.</li>
+										<li>Felis enim feugiat.</li>
+									</ul>
 
-      <div class="w3-container w3-card w3-white">
-        <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-certificate fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Education</h2>
-        <div class="w3-container">
-          <h5 class="w3-opacity"><b>Southern Illinois University Edwardsville / SIUE</b></h5>
-          
-          <img src="https://s3.amazonaws.com/eventimages/events/125083/icon.png?v=53" alt="SIUE" style="width:20%;height:20%;">
-            
-          <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>2023 - Current</h6>
-          <p>Majoring in Computer Science</p>
-          <p>Honor roll student for 12 consecutive quarters</p>
-          <p>Completed CS140 (C++ basics), CS150 (C++ pointers and lists), CS238 (Computer Science Architecture)</p>
-          <p><a href="FinalProject.html">Final project for CS 235</a></p>
-          <hr>
-        </div>
-        <div class="w3-container">
-          <h5 class="w3-opacity"><b>American Public University / APU</b></h5>
+									<h4>Ordered</h4>
+									<ol>
+										<li>Dolor pulvinar etiam.</li>
+										<li>Etiam vel felis viverra.</li>
+										<li>Felis enim feugiat.</li>
+										<li>Dolor pulvinar etiam.</li>
+										<li>Etiam vel felis lorem.</li>
+										<li>Felis enim et feugiat.</li>
+									</ol>
+									<h4>Icons</h4>
+									<ul class="icons">
+										<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+										<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+										<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+										<li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
+									</ul>
 
-          <img src="https://www.onlinecoursereport.com/wp-content/uploads/2017/12/apus.png" alt="APUS" style="width:20%;height:20%;">
-          
-          <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>2021 - 2023</h6>
-          <p>Majored in Computer Science Networking before transferring</p>
-          <p>Python programming for various assignments</p>
-          <p>Structured network layout in an assignment for a hypothetical company, using switches, servers, network security, etc.</p>
-          <hr>
-        </div>
-        <div class="w3-container">
-          <h5 class="w3-opacity"><b>High School</b></h5>
-          <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>2017 - 2021</h6>
-          <p>Won the "Student Services for Excellence" senior year for outstanding performance during an intership (chosen by Principal).</p>
-          <p>Won the "Math Award for Excellence" (Handpicked by Math Department)</p>
-          <p>Won four "Peer Awards" junior year (nominated by peers)</p>
-          <p>Selected to graduate five months early by a board of instructors.</p>
-          <p>Chosen for the main school art display ten times (selected by Art Director)</p><br>
-        </div>
-      </div>
+									<h4>Actions</h4>
+									<ul class="actions">
+										<li><a href="#" class="button primary">Default</a></li>
+										<li><a href="#" class="button">Default</a></li>
+									</ul>
+									<ul class="actions stacked">
+										<li><a href="#" class="button primary">Default</a></li>
+										<li><a href="#" class="button">Default</a></li>
+									</ul>
+								</section>
 
-      <!-- End Education Experience grid -->
+								<section>
+									<h3 class="major">Table</h3>
+									<h4>Default</h4>
+									<div class="table-wrapper">
+										<table>
+											<thead>
+												<tr>
+													<th>Name</th>
+													<th>Description</th>
+													<th>Price</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>Item One</td>
+													<td>Ante turpis integer aliquet porttitor.</td>
+													<td>29.99</td>
+												</tr>
+												<tr>
+													<td>Item Two</td>
+													<td>Vis ac commodo adipiscing arcu aliquet.</td>
+													<td>19.99</td>
+												</tr>
+												<tr>
+													<td>Item Three</td>
+													<td> Morbi faucibus arcu accumsan lorem.</td>
+													<td>29.99</td>
+												</tr>
+												<tr>
+													<td>Item Four</td>
+													<td>Vitae integer tempus condimentum.</td>
+													<td>19.99</td>
+												</tr>
+												<tr>
+													<td>Item Five</td>
+													<td>Ante turpis integer aliquet porttitor.</td>
+													<td>29.99</td>
+												</tr>
+											</tbody>
+											<tfoot>
+												<tr>
+													<td colspan="2"></td>
+													<td>100.00</td>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
 
-      <div class="w3-container w3-card w3-white">
-        <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-certificate fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Hobbies</h2>
-        <div class="w3-container">
-          <h5 class="w3-opacity"><b>Mixed Media Art</b></h5>
-          <p>When I have the time I like to start art projects. I like to challenge myself, so I am usually working on a different medium, method each time. I have done woodcarving, painting, scratch art, drawing, 3D modeling, watercolor, and more. Back in 2014, I used a 3D software to create items that were accepted into in the video game Trove</p>
+									<h4>Alternate</h4>
+									<div class="table-wrapper">
+										<table class="alt">
+											<thead>
+												<tr>
+													<th>Name</th>
+													<th>Description</th>
+													<th>Price</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>Item One</td>
+													<td>Ante turpis integer aliquet porttitor.</td>
+													<td>29.99</td>
+												</tr>
+												<tr>
+													<td>Item Two</td>
+													<td>Vis ac commodo adipiscing arcu aliquet.</td>
+													<td>19.99</td>
+												</tr>
+												<tr>
+													<td>Item Three</td>
+													<td> Morbi faucibus arcu accumsan lorem.</td>
+													<td>29.99</td>
+												</tr>
+												<tr>
+													<td>Item Four</td>
+													<td>Vitae integer tempus condimentum.</td>
+													<td>19.99</td>
+												</tr>
+												<tr>
+													<td>Item Five</td>
+													<td>Ante turpis integer aliquet porttitor.</td>
+													<td>29.99</td>
+												</tr>
+											</tbody>
+											<tfoot>
+												<tr>
+													<td colspan="2"></td>
+													<td>100.00</td>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
+								</section>
 
-          <div class="w3-row-padding">
-            
+								<section>
+									<h3 class="major">Buttons</h3>
+									<ul class="actions">
+										<li><a href="#" class="button primary">Primary</a></li>
+										<li><a href="#" class="button">Default</a></li>
+									</ul>
+									<ul class="actions">
+										<li><a href="#" class="button">Default</a></li>
+										<li><a href="#" class="button small">Small</a></li>
+									</ul>
+									<ul class="actions">
+										<li><a href="#" class="button primary icon solid fa-download">Icon</a></li>
+										<li><a href="#" class="button icon solid fa-download">Icon</a></li>
+									</ul>
+									<ul class="actions">
+										<li><span class="button primary disabled">Disabled</span></li>
+										<li><span class="button disabled">Disabled</span></li>
+									</ul>
+								</section>
 
-              <img src="https://cdn.discordapp.com/attachments/191403883518492672/1255631102241013881/IMG_0237.jpg?ex=667dd517&is=667c8397&hm=05f426faef093dea16f3e9fc7c1d9a078e4e06d4f3644dc9b050a3e52dcb8cc1&" alt="fox" style="width:20%;height:20%;">
+								<section>
+									<h3 class="major">Form</h3>
+									<form method="post" action="#">
+										<div class="fields">
+											<div class="field half">
+												<label for="demo-name">Name</label>
+												<input type="text" name="demo-name" id="demo-name" value="" placeholder="Jane Doe" />
+											</div>
+											<div class="field half">
+												<label for="demo-email">Email</label>
+												<input type="email" name="demo-email" id="demo-email" value="" placeholder="jane@untitled.tld" />
+											</div>
+											<div class="field">
+												<label for="demo-category">Category</label>
+												<select name="demo-category" id="demo-category">
+													<option value="">-</option>
+													<option value="1">Manufacturing</option>
+													<option value="1">Shipping</option>
+													<option value="1">Administration</option>
+													<option value="1">Human Resources</option>
+												</select>
+											</div>
+											<div class="field half">
+												<input type="radio" id="demo-priority-low" name="demo-priority" checked>
+												<label for="demo-priority-low">Low</label>
+											</div>
+											<div class="field half">
+												<input type="radio" id="demo-priority-high" name="demo-priority">
+												<label for="demo-priority-high">High</label>
+											</div>
+											<div class="field half">
+												<input type="checkbox" id="demo-copy" name="demo-copy">
+												<label for="demo-copy">Email me a copy</label>
+											</div>
+											<div class="field half">
+												<input type="checkbox" id="demo-human" name="demo-human" checked>
+												<label for="demo-human">Not a robot</label>
+											</div>
+											<div class="field">
+												<label for="demo-message">Message</label>
+												<textarea name="demo-message" id="demo-message" placeholder="Enter your message" rows="6"></textarea>
+											</div>
+										</div>
+										<ul class="actions">
+											<li><input type="submit" value="Send Message" class="primary" /></li>
+											<li><input type="reset" value="Reset" /></li>
+										</ul>
+									</form>
+								</section>
 
-  
+							</article>
 
-              <img src="https://cdn.discordapp.com/attachments/191403883518492672/1255631102760976535/IMG_0702.jpg?ex=667dd517&is=667c8397&hm=4384d8612c1c32642773530b9351190ab6c9e26dac7fdfab9f46a8867d4ad3ee&" alt="fox2" style="width:35%;height:40%;">
+					</div>
 
-  
-  
+				<!-- Footer -->
+					<footer id="footer">
+						<p class="copyright">&copy; Ethan Lemieux. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+					</footer>
 
-              <img src="https://cdn.discordapp.com/attachments/191403883518492672/1255631103625265213/IMG_5402.jpg?ex=667dd517&is=667c8397&hm=65c917d8774dd668512c459e43276deaefe590699cfd485c143a81dec131247a&" alt="wolf" style="width:20%;height:20%;">
+			</div>
 
-  
-  
+		<!-- BG -->
+			<div id="bg"></div>
 
-              <img src="https://cdn.discordapp.com/attachments/191403883518492672/1255631587077390376/IMG_5520.jpg?ex=667dd58a&is=667c840a&hm=971dc931fcf10b3c0d90ed20b486a7313af221ec7b11966b5debd460bf0a9f71&" alt="raven" style="width:20%;height:20%;">
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
 
-            
-          </div>
-          
-          <hr>
-        </div>
-        <div class="w3-container">
-          <h5 class="w3-opacity"><b>Music Production</b></h5>
-          <p>I started making music back in 2022 in Ableton Live. Over the past few years, I have uploaded sixteen songs to my <a href="https://www.youtube.com/@gumplesteen3888/featured">YouTube page.</a> Through tinkering, I have learned various concepts such as Music theory, sound engineering, and Digital Audio Workspace configurating</p>
-
-          <div class="w3-row-padding">
-
-            <img src="https://cdn.discordapp.com/attachments/191403883518492672/1255642013055848530/image.png?ex=667ddf40&is=667c8dc0&hm=968ca7f5c1e7368a48497c2aad7083a275502a92abde0cb6cebd8103e889498d&" alt="Ableton1" style="width:45%;height:45%;">
-
-            <img src="https://cdn.discordapp.com/attachments/191403883518492672/1255643225461362789/image.png?ex=667de061&is=667c8ee1&hm=0df4fbdc6d3c8c4f7e4e0191496c23316417fadf871da7d27c944888d40cf4fc&" alt="Ableton2" style="width:45%;height:45%;">
-
-            
-          </div>
-          
-          <hr>
-        </div>
-        <div class="w3-container">
-          <h5 class="w3-opacity"><b>Hardware/Software repair</b></h5>
-          <p>I have repaired various computer problems when working in the IT field, but I also like to tinker and solve problems as a hobby. I have repaired cameras, recovered disc data from an Iphone, and made general repairs and maintenence to computers.</p><br>
-        </div>
-      </div>
-
-      <!-- End Hobbies grid -->
-
-    <!-- End Right Column -->
-    </div>
-    
-  <!-- End Grid -->
-  </div>
-  
-  <!-- End Page Container -->
-</div>
-
-<footer class="w3-container w3-teal w3-center w3-margin-top">
-  <p>Find me on social media.</p>
-  <i class="fa fa-facebook-official w3-hover-opacity"></i>
-  <i class="fa fa-instagram w3-hover-opacity"></i>
-  <i class="fa fa-snapchat w3-hover-opacity"></i>
-  <i class="fa fa-pinterest-p w3-hover-opacity"></i>
-  <i class="fa fa-twitter w3-hover-opacity"></i>
-  <i class="fa fa-linkedin w3-hover-opacity"></i>
-  <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
-</footer>
-
-</body>
+	</body>
 </html>
