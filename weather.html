@@ -44,7 +44,7 @@ document.getElementById('weatherForm').addEventListener('submit', function(event
             
             weatherDataDiv.innerHTML = `
                 
-                <p>Temperature: ${data.periods.temperature}°F</p><br>
+                <p>Temperature: ${data.properties.periods[i].temperature}°F</p><br>
                 
             `;
 
