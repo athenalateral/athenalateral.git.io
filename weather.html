@@ -32,7 +32,17 @@ document.getElementById('weatherForm').addEventListener('submit', function(event
 
     console.log(`Link is: ${url}`);
 
-    const obj = JSON.parse(url);
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            // Display the data (customize based on your API response structure)
+            const weatherDataDiv = document.getElementById('weatherData');
+            weatherDataDiv.innerHTML = `
+                <h2>Weather Data:</h2>
+                <p>Temperature: ${data.main.temp}°C</p>
+                <p>Weather: ${data.weather[0].description}</p>
+            `;
+        })
                                                         
 });
 </script>
