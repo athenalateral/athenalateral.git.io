@@ -38,17 +38,20 @@ document.getElementById('weatherForm').addEventListener('submit', function(event
             // Display the data (customize based on your API response structure)
             const weatherDataDiv = document.getElementById('weatherData');
             // ------------------------------------------------------------------
-            weatherDataDiv.innerHTML = `<h2>Weather Data:</h2>`;
-            
-            for (let i = 0; i < 13; ++i) {
-            
-            weatherDataDiv.innerHTML = `
-                
-                <p>Temperature: ${data.properties.periods[i].temperature}°F</p><br>
-                
-            `;
+            weatherDataDiv.innerHTML = `<h2>Weather Data:</h2>`; // Clear any existing content
 
+
+
+            for (let i = 0; i < 13; ++i) {
+                weatherDataDiv.innerHTML += ` 
+                    <p>Period ${i + 1}: ${data.properties.periods[i].name}</p>
+                    <p>Temperature: ${data.properties.periods[i].temperature}°F</p><br>
+                `; // appends text, lists period, lists temperature
             }
+
+
+
+            
             // ------------------------------------------------------------------
         })
                                                         
