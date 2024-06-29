@@ -39,8 +39,7 @@ document.getElementById('weatherForm').addEventListener('submit', function(event
             const weatherDataDiv = document.getElementById('weatherData');
             weatherDataDiv.innerHTML = `
                 <h2>Weather Data:</h2>
-                <p>Temperature: ${data.main.temp}°C</p>
-                <p>Weather: ${data.weather[0].description}</p>
+                <p>Temperature: ${data.main.temperature}°F</p>
             `;
         })
                                                         
