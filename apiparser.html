@@ -77,7 +77,9 @@
 																<thead>
 																	<tr>
 																		<th>Day</th>
+		  																<th>Start Time</th>
 																		<th>Temperature</th>
+		  		  														<th>Forecast</th>
 																		<th>Wind speed</th>
 																		<th>Wind direction</th>																
 																	</tr>
@@ -85,7 +87,9 @@
 																<tbody>
 																	<tr>
 																		<td>${json.properties.periods[i].name}</td>
+		 																<td>${json.properties.periods[i].startTime}</td>
 																		<td>${json.properties.periods[i].temperature}°F</td>
+		  																<td>${json.properties.periods[i].shortForecast}</td>
 																		<td>${json.properties.periods[i].windSpeed}</td>
 																		<td>${json.properties.periods[i].windDirection}</td>
 																	</tr>
@@ -139,7 +143,9 @@
 																<thead>
 																	<tr>
 																		<th>Day</th>
+		  																<th>Start Time</th>
 																		<th>Temperature</th>
+		  		  														<th>Forecast</th>
 																		<th>Wind speed</th>
 																		<th>Wind direction</th>																
 																	</tr>
@@ -147,7 +153,9 @@
 																<tbody>
 																	<tr>
 																		<td>${json.properties.periods[i].name}</td>
+		 																<td>${json.properties.periods[i].startTime}</td>
 																		<td>${json.properties.periods[i].temperature}°F</td>
+		  																<td>${json.properties.periods[i].shortForecast}</td>
 																		<td>${json.properties.periods[i].windSpeed}</td>
 																		<td>${json.properties.periods[i].windDirection}</td>
 																	</tr>
