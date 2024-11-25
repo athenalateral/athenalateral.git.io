@@ -6,11 +6,18 @@
     <title>Spell Checker</title>
 </head>
 <body>
-    <h1>this is a test to see what's happening</h1>
+    <h1>Spellchecker</h1>
+    <h3>type a word in the box for 10 words close to it</h3>
+
+    <form id="spellchecker" action="spellchecking_algorithm.php">
+      Word: <input type="text" name="word"><br><br>
+      <input type="button" onclick="submit()" value="Submit form">
+    </form>
+    
     <script>
-        
-        document.getElementById("myForm").submit();
-        
+        function submit {
+            document.getElementById("spellchecker").submit();
+        }        
     </script>
     <a href="https://athenalateral.github.io/athenalateral.git.io/">Back to Homepage</a>
 </body>
