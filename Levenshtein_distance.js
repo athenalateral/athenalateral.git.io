@@ -16,16 +16,14 @@ document.getElementById("spell-checker-form").addEventListener("submit", functio
       // Parse the dictionary into an array of words
       const dictionary = data.split(/\r?\n/).map(word => word.trim().toLowerCase());
 
-      // Calculate alignment scores (Levenshtein Distance) for all words
+      // Calculate alignment scores with custom penalties
       const scores = dictionary.map(word => ({
         word,
-        score: levenshteinDistance(inputWord, word),
+        score: levenshteinDistanceWithPenalties(inputWord, word),
       }));
-
-      // Sort by score (ascending, lowest distance is better)
+      
+      // Sort and get top 10 matches
       const sortedScores = scores.sort((a, b) => a.score - b.score);
-
-      // Get the top 10 best matches
       const bestMatches = sortedScores.slice(0, 10);
 
       // Display results
@@ -40,21 +38,35 @@ document.getElementById("spell-checker-form").addEventListener("submit", functio
 });
 
 // Levenshtein Distance Algorithm
-function levenshteinDistance(a, b) {
+function levenshteinDistanceWithPenalties(a, b) {
+  const isVowel = char => "aeiou".includes(char.toLowerCase());
+
   const matrix = Array.from({ length: a.length + 1 }, () =>
     Array(b.length + 1).fill(0)
   );
 
-  for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
-  for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
+  // Initialize the first row and column with gap penalties
+  for (let i = 0; i <= a.length; i++) matrix[i][0] = i * 2; // Gap penalty = 2
+  for (let j = 0; j <= b.length; j++) matrix[0][j] = j * 2; // Gap penalty = 2
 
   for (let i = 1; i <= a.length; i++) {
     for (let j = 1; j <= b.length; j++) {
-      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      const charA = a[i - 1];
+      const charB = b[j - 1];
+
+      let cost;
+      if (charA === charB) {
+        cost = 0; // Exact match = 0
+      } else if (isVowel(charA) === isVowel(charB)) {
+        cost = 1; // Consonant/Consonant or Vowel/Vowel mismatch = 1
+      } else {
+        cost = 3; // Vowel/Consonant mismatch = 3
+      }
+
       matrix[i][j] = Math.min(
-        matrix[i - 1][j] + 1, // deletion
-        matrix[i][j - 1] + 1, // insertion
-        matrix[i - 1][j - 1] + cost // substitution
+        matrix[i - 1][j] + 2, // Deletion (gap penalty = 2)
+        matrix[i][j - 1] + 2, // Insertion (gap penalty = 2)
+        matrix[i - 1][j - 1] + cost // Substitution with custom cost
       );
     }
   }
