@@ -1,57 +1,113 @@
-<?php
-// Find the Needleman-Wunsch distance
-function needleman_wunsch($seq1, $seq2) {
-    $m = strlen($seq1);
-    $n = strlen($seq2);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Closest Words</title>
+</head>
+<body>
 
-    // Create scoring matrix
-    $score = 1;  // match score
-    $penalty = -1;  // mismatch and gap penalty
+<h2>Find Closest Words</h2>
+<form id="wordForm">
+    <input type="text" id="wordInput" placeholder="Enter a word" required />
+    <button type="submit">Find Closest Words</button>
+</form>
 
-    // Initialize matrix
-    $matrix = array();
-    for ($i = 0; $i <= $m; $i++) {
-        for ($j = 0; $j <= $n; $j++) {
-            if ($i == 0) {
-                $matrix[$i][$j] = $j * $penalty;
-            } elseif ($j == 0) {
-                $matrix[$i][$j] = $i * $penalty;
-            } else {
-                $match = $matrix[$i - 1][$j - 1] + (($seq1[$i - 1] == $seq2[$j - 1]) ? $score : $penalty);
-                $insert = $matrix[$i - 1][$j] + $penalty;
-                $delete = $matrix[$i][$j - 1] + $penalty;
-                $matrix[$i][$j] = max($match, $insert, $delete);
+<h3>Closest Words:</h3>
+<ul id="results"></ul>
+
+<script>
+function isVowel(char) {
+    return ['a', 'e', 'i', 'o', 'u'].includes(char.toLowerCase());
+}
+
+// Modified Needleman-Wunsch Algorithm with new penalties
+function needlemanWunsch(seq1, seq2) {
+    const m = seq1.length;
+    const n = seq2.length;
+    
+    const gapPenalty = 2;
+    const exactMatchPenalty = 0;
+    const consonantConsonantMismatchPenalty = 1;
+    const vowelConsonantMismatchPenalty = 3;
+    const vowelVowelMismatchPenalty = 1;
+
+    // Create the score matrix
+    let matrix = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+    
+    // Initialize the matrix for gaps
+    for (let i = 0; i <= m; i++) matrix[i][0] = i * gapPenalty;
+    for (let j = 0; j <= n; j++) matrix[0][j] = j * gapPenalty;
+    
+    // Fill the matrix with scores based on the match/mismatch penalties
+    for (let i = 1; i <= m; i++) {
+        for (let j = 1; j <= n; j++) {
+            let score = 0;
+
+            // Check for exact match
+            if (seq1[i - 1] === seq2[j - 1]) {
+                score = exactMatchPenalty;
+            } 
+            // Check for consonant vs consonant or vowel vs vowel mismatch
+            else if (isVowel(seq1[i - 1]) && isVowel(seq2[j - 1])) {
+                score = vowelVowelMismatchPenalty;
+            } 
+            // Check for consonant vs consonant mismatch
+            else if (!isVowel(seq1[i - 1]) && !isVowel(seq2[j - 1])) {
+                score = consonantConsonantMismatchPenalty;
+            } 
+            // Vowel vs consonant mismatch
+            else {
+                score = vowelConsonantMismatchPenalty;
             }
+
+            // Fill the matrix with the maximum score based on the alignment options
+            matrix[i][j] = Math.max(
+                matrix[i - 1][j - 1] + score,  // Diagonal (match/mismatch)
+                matrix[i - 1][j] + gapPenalty, // Vertical (gap)
+                matrix[i][j - 1] + gapPenalty  // Horizontal (gap)
+            );
         }
     }
 
-    // Return the final score (edit distance)
-    return $matrix[$m][$n];
+    return matrix[m][n];
 }
 
-// Load dictionary (this could be a file or a database)
-$dictionary = ["apple", "banana", "cherry", "grape", "melon", "orange", "peach", "pear", "plum", "strawberry"]; // Example
+// Example dictionary (unchanged)
+const dictionary = [
+    "apple", "banana", "cherry", "grape", "melon",
+    "orange", "peach", "pear", "plum", "strawberry"
+];
 
-// Get input from JavaScript
-$data = json_decode(file_get_contents("php://input"));
-$input_word = $data->word;
-
-// Compute distances
-$distances = [];
-foreach ($dictionary as $dict_word) {
-    $distance = needleman_wunsch($input_word, $dict_word);
-    $distances[] = ['word' => $dict_word, 'distance' => $distance];
-}
-
-// Sort by distance
-usort($distances, function($a, $b) {
-    return $a['distance'] - $b['distance'];
+// Handle form submission and comparison
+document.getElementById('wordForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent form from submitting normally
+    
+    const word = document.getElementById('wordInput').value.toLowerCase(); // Get input word
+    
+    // Compute the distances to all dictionary words
+    const distances = dictionary.map(dictWord => {
+        return {
+            word: dictWord,
+            distance: needlemanWunsch(word, dictWord)
+        };
+    });
+    
+    // Sort by distance (ascending)
+    distances.sort((a, b) => a.distance - b.distance);
+    
+    // Display the closest 10 words
+    const resultsList = document.getElementById('results');
+    resultsList.innerHTML = ''; // Clear previous results
+    
+    const top10Words = distances.slice(0, 10); // Get the top 10 closest words
+    top10Words.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = `${item.word} - Distance: ${item.distance}`;
+        resultsList.appendChild(li);
+    });
 });
+</script>
 
-// Get the 10 closest words
-$closest_words = array_slice($distances, 0, 10);
-
-// Return the result as JSON
-header('Content-Type: application/json');
-echo json_encode($closest_words);
-?>
+</body>
+</html>
