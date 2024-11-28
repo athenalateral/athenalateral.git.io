@@ -57,14 +57,18 @@ function needlemanWunsch(seq1, seq2) {
     const m = seq1.length;
     const n = seq2.length;
 
-    // Updated gap and mismatch penalties
-    const gapPenalty = 1; // Reduced gap penalty
-    const exactMatchPenalty = 0;  // No penalty for exact match
-    const consonantConsonantMismatchPenalty = 2;  // Higher penalty for consonant mismatches
-    const vowelConsonantMismatchPenalty = 3;  // Higher penalty for vowel/consonant mismatches
-    const vowelVowelMismatchPenalty = 1;  // Lower penalty for vowel/vowel mismatches
+    // Penalties
+    const exactMatchPenalty = 0; 
+    const consonantConsonantMismatchPenalty = 1;  
+    const vowelVowelMismatchPenalty = 1; 
+    const vowelConsonantMismatchPenalty = 3; 
+    const gapPenalty = 2; 
+     
+    
+    
+    
 
-    // Create the score matrix
+    // Grid creation
     let matrix = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
 
     // Initialize the matrix for gaps
@@ -76,15 +80,15 @@ function needlemanWunsch(seq1, seq2) {
         for (let j = 1; j <= n; j++) {
             let score = 0;
 
-            // Check for exact match
+            // Exact match
             if (seq1[i - 1] === seq2[j - 1]) {
                 score = exactMatchPenalty;  // No penalty for exact match
             } 
-            // Check for consonant vs consonant or vowel vs vowel mismatch
+            // Vowel v Vowel
             else if (isVowel(seq1[i - 1]) && isVowel(seq2[j - 1])) {
                 score = vowelVowelMismatchPenalty;
             } 
-            // Check for consonant vs consonant mismatch
+            // Consonant v consonant
             else if (!isVowel(seq1[i - 1]) && !isVowel(seq2[j - 1])) {
                 score = consonantConsonantMismatchPenalty;
             } 
