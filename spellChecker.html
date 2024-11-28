@@ -8,15 +8,47 @@
 <body>
 
 <h2>Find Closest Words</h2>
+
+<!-- Word input form -->
 <form id="wordForm">
     <input type="text" id="wordInput" placeholder="Enter a word" required />
     <button type="submit">Find Closest Words</button>
 </form>
 
+<!-- File input to upload a .txt file -->
+<h3>Upload a dictionary file (.txt):</h3>
+<input type="file" id="fileInput" />
+
 <h3>Closest Words:</h3>
 <ul id="results"></ul>
 
+
 <script>
+
+let dictionary = [];
+
+// Read the contents of the uploaded .txt file and populate the dictionary
+document.getElementById('fileInput').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file && file.type === 'text/plain') {
+        const reader = new FileReader();
+
+        // When the file is successfully read
+        reader.onload = function(e) {
+            const text = e.target.result;  // File content as a string
+            // Split the content into words and trim any extra whitespace
+            dictionary = text.split('\n').map(word => word.trim().toLowerCase());
+            console.log("Dictionary loaded:", dictionary);
+        };
+
+        // Read the file as text
+        reader.readAsText(file);
+    } else {
+        alert("Please upload a valid text file.");
+    }
+});
+
+    
 function isVowel(char) {
     return ['a', 'e', 'i', 'o', 'u'].includes(char.toLowerCase());
 }
@@ -73,18 +105,17 @@ function needlemanWunsch(seq1, seq2) {
     return matrix[m][n];
 }
 
-// Example dictionary (unchanged)
-const dictionary = [
-    "apple", "banana", "cherry", "grape", "melon",
-    "orange", "peach", "pear", "plum", "strawberry"
-];
-
-// Handle form submission and comparison
 document.getElementById('wordForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent form from submitting normally
     
     const word = document.getElementById('wordInput').value.toLowerCase(); // Get input word
     
+    // Ensure the dictionary is loaded before proceeding
+    if (dictionary.length === 0) {
+        alert("Please upload a dictionary file first.");
+        return;
+    }
+
     // Compute the distances to all dictionary words
     const distances = dictionary.map(dictWord => {
         return {
@@ -92,7 +123,7 @@ document.getElementById('wordForm').addEventListener('submit', function(event) {
             distance: needlemanWunsch(word, dictWord)
         };
     });
-    
+
     // Sort by distance (ascending)
     distances.sort((a, b) => a.distance - b.distance);
     
