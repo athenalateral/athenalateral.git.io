@@ -3,22 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spell Checker</title>
+    <title>Word Comparison</title>
 </head>
 <body>
-    <h1>Spellchecker</h1>
-    <h3>type a word in the box for 10 words close to it</h3>
 
-    <form id="spellchecker" action="spellchecking_algorithm.php">
-      Word: <input type="text" name="word"><br><br>
-      <input type="button" onclick="submit()" value="Submit form">
+    <h2>Find Closest Words</h2>
+    <form id="wordForm">
+        <input type="text" id="wordInput" placeholder="Enter a word" required />
+        <button type="submit">Find Closest Words</button>
     </form>
-    
+
+    <h3>Closest Words:</h3>
+    <ul id="results"></ul>
+
     <script>
-        function submit {
-            document.getElementById("spellchecker").submit();
-        }        
+        document.getElementById('wordForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            const word = document.getElementById('wordInput').value;
+
+            // Send the word to the PHP server
+            fetch('find_closest_words.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ word: word })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display the 10 closest words
+                const resultsList = document.getElementById('results');
+                resultsList.innerHTML = ''; // Clear previous results
+                data.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item.word + " - Distance: " + item.distance;
+                    resultsList.appendChild(li);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+        });
     </script>
-    <a href="https://athenalateral.github.io/athenalateral.git.io/">Back to Homepage</a>
+
 </body>
 </html>
