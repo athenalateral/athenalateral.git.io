@@ -1,3 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Closest Words</title>
+</head>
+<body>
+
+<h2>Find Closest Words</h2>
+<form id="wordForm">
+    <input type="text" id="wordInput" placeholder="Enter a word" required />
+    <button type="submit">Find Closest Words</button>
+</form>
+
+<h3>Closest Words:</h3>
+<ul id="results"></ul>
+
+<script>
+
 // Function to check if a character is a vowel
 function isVowel(char) {
     return ['a', 'e', 'i', 'o', 'u'].includes(char.toLowerCase());
@@ -89,3 +109,5 @@ document.getElementById('wordForm').addEventListener('submit', function(event) {
         resultsList.appendChild(li);
     });
 });
+
+</script>
