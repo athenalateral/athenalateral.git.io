@@ -3,47 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word Comparison</title>
+    <title>Find Closest Words</title>
 </head>
 <body>
 
-    <h2>Find Closest Words</h2>
-    <form id="wordForm">
-        <input type="text" id="wordInput" placeholder="Enter a word" required />
-        <button type="submit">Find Closest Words</button>
-    </form>
+<h2>Find Closest Words</h2>
+<form id="wordForm">
+    <input type="text" id="wordInput" placeholder="Enter a word" required />
+    <button type="submit">Find Closest Words</button>
+</form>
 
-    <h3>Closest Words:</h3>
-    <ul id="results"></ul>
+<h3>Closest Words:</h3>
+<ul id="results"></ul>
 
-    <script>
-        document.getElementById('wordForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent form submission
+<script>
+// Needleman-Wunsch Algorithm in JavaScript
+function needlemanWunsch(seq1, seq2) {
+    const m = seq1.length;
+    const n = seq2.length;
+    const gapPenalty = -1;
+    const matchScore = 1;
+    const mismatchPenalty = -1;
+    
+    // Create score matrix
+    let matrix = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+    
+    // Initialize the matrix
+    for (let i = 0; i <= m; i++) matrix[i][0] = i * gapPenalty;
+    for (let j = 0; j <= n; j++) matrix[0][j] = j * gapPenalty;
+    
+    // Fill the matrix
+    for (let i = 1; i <= m; i++) {
+        for (let j = 1; j <= n; j++) {
+            let score = (seq1[i - 1] === seq2[j - 1]) ? matchScore : mismatchPenalty;
+            matrix[i][j] = Math.max(
+                matrix[i - 1][j - 1] + score, // Diagonal (match/mismatch)
+                matrix[i - 1][j] + gapPenalty, // Vertical (gap)
+                matrix[i][j - 1] + gapPenalty  // Horizontal (gap)
+            );
+        }
+    }
 
-            const word = document.getElementById('wordInput').value;
+    return matrix[m][n];
+}
 
-            // Send the word to the PHP server
-            fetch('find_closest_words.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ word: word })
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Display the 10 closest words
-                const resultsList = document.getElementById('results');
-                resultsList.innerHTML = ''; // Clear previous results
-                data.forEach(item => {
-                    const li = document.createElement('li');
-                    li.textContent = item.word + " - Distance: " + item.distance;
-                    resultsList.appendChild(li);
-                });
-            })
-            .catch(error => console.error('Error:', error));
-        });
-    </script>
+// Example dictionary
+const dictionary = [
+    "apple", "banana", "cherry", "grape", "melon",
+    "orange", "peach", "pear", "plum", "strawberry"
+];
+
+// Handle form submission and comparison
+document.getElementById('wordForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent form from submitting normally
+    
+    const word = document.getElementById('wordInput').value.toLowerCase(); // Get input word
+    
+    // Compute the distances to all dictionary words
+    const distances = dictionary.map(dictWord => {
+        return {
+            word: dictWord,
+            distance: needlemanWunsch(word, dictWord)
+        };
+    });
+    
+    // Sort by distance (ascending)
+    distances.sort((a, b) => a.distance - b.distance);
+    
+    // Display the closest 10 words
+    const resultsList = document.getElementById('results');
+    resultsList.innerHTML = ''; // Clear previous results
+    
+    const top10Words = distances.slice(0, 10); // Get the top 10 closest words
+    top10Words.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = `${item.word} - Distance: ${item.distance}`;
+        resultsList.appendChild(li);
+    });
+});
+</script>
 
 </body>
 </html>
