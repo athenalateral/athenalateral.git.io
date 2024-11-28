@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spell Checker</title>
+</head>
+<body>
+  <h1>Spell Checker</h1>
+  <form id="spell-checker-form">
+    <label for="word-input">Enter a word:</label>
+    <input type="text" id="word-input" placeholder="Type a word..." required>
+    <button type="submit">Check Spelling</button>
+  </form>
+  <p id="result"></p>
+
+  <script src="spell-checker.js"></script>
+</body>
+</html>
