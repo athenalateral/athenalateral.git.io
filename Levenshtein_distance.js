@@ -16,25 +16,22 @@ document.getElementById("spell-checker-form").addEventListener("submit", functio
       // Parse the dictionary into an array of words
       const dictionary = data.split(/\r?\n/).map(word => word.trim().toLowerCase());
 
-      // Check for direct matches
-      if (dictionary.includes(inputWord)) {
-        resultElement.textContent = `"${inputWord}" is spelled correctly.`;
-        return;
-      }
-
-      // Calculate alignment scores (Levenshtein Distance)
+      // Calculate alignment scores (Levenshtein Distance) for all words
       const scores = dictionary.map(word => ({
         word,
         score: levenshteinDistance(inputWord, word),
       }));
 
-      // Find the closest match(es)
-      const closestMatches = scores.sort((a, b) => a.score - b.score).slice(0, 5);
+      // Sort by score (ascending, lowest distance is better)
+      const sortedScores = scores.sort((a, b) => a.score - b.score);
+
+      // Get the top 10 best matches
+      const bestMatches = sortedScores.slice(0, 10);
 
       // Display results
       resultElement.innerHTML = `
-        "${inputWord}" is misspelled. Did you mean:<br>
-        ${closestMatches.map(match => `${match.word} (Score: ${match.score})`).join("<br>")}
+        "${inputWord}" is not found in the dictionary. Best matches are:<br>
+        ${bestMatches.map(match => `${match.word} (Score: ${match.score})`).join("<br>")}
       `;
     })
     .catch(err => {
