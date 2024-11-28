@@ -23,7 +23,7 @@
             const word = document.getElementById('wordInput').value;
 
             // Send the word to the PHP server
-            fetch('spellchecking_algorithm.php', {
+            fetch('find_closest_words.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
