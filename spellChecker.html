@@ -53,24 +53,23 @@ function isVowel(char) {
     return ['a', 'e', 'i', 'o', 'u'].includes(char.toLowerCase());
 }
 
-// Modified Needleman-Wunsch Algorithm with new penalties
 function needlemanWunsch(seq1, seq2) {
     const m = seq1.length;
     const n = seq2.length;
-    
+
     const gapPenalty = 2;
-    const exactMatchPenalty = 0;
+    const exactMatchPenalty = 0;  // No penalty for exact match
     const consonantConsonantMismatchPenalty = 1;
     const vowelConsonantMismatchPenalty = 3;
     const vowelVowelMismatchPenalty = 1;
 
     // Create the score matrix
     let matrix = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
-    
+
     // Initialize the matrix for gaps
     for (let i = 0; i <= m; i++) matrix[i][0] = i * gapPenalty;
     for (let j = 0; j <= n; j++) matrix[0][j] = j * gapPenalty;
-    
+
     // Fill the matrix with scores based on the match/mismatch penalties
     for (let i = 1; i <= m; i++) {
         for (let j = 1; j <= n; j++) {
@@ -93,7 +92,7 @@ function needlemanWunsch(seq1, seq2) {
                 score = vowelConsonantMismatchPenalty;
             }
 
-            // Fill the matrix with the maximum score based on the alignment options
+            // Compute the score based on the alignment options
             matrix[i][j] = Math.max(
                 matrix[i - 1][j - 1] + score,  // Diagonal (match/mismatch)
                 matrix[i - 1][j] + gapPenalty, // Vertical (gap)
@@ -102,8 +101,11 @@ function needlemanWunsch(seq1, seq2) {
         }
     }
 
-    // Return the final score (bottom-right corner of the matrix)
-    return matrix[m][n];
+    // Debugging: Log the matrix to check how the final score is being computed
+    console.log("Matrix for:", seq1, seq2);
+    console.table(matrix);
+
+    return matrix[m][n];  // Return the final score (bottom-right corner of the matrix)
 }
 
 document.getElementById('wordForm').addEventListener('submit', function(event) {
