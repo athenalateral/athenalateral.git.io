@@ -13,31 +13,61 @@
     <button type="submit">Find Closest Words</button>
 </form>
 
+<h3>Upload Dictionary</h3>
+<input type="file" id="fileInput" />
+
 <h3>Closest Words:</h3>
 <ul id="results"></ul>
 
 <script>
-// Needleman-Wunsch Algorithm in JavaScript
+// Function to check if a character is a vowel
+function isVowel(char) {
+    return ['a', 'e', 'i', 'o', 'u'].includes(char.toLowerCase());
+}
+
+// Needleman-Wunsch Algorithm with new penalties
 function needlemanWunsch(seq1, seq2) {
     const m = seq1.length;
     const n = seq2.length;
-    const gapPenalty = -1;
-    const matchScore = 1;
-    const mismatchPenalty = -1;
     
-    // Create score matrix
+    const gapPenalty = 2;
+    const exactMatchPenalty = 0;
+    const consonantConsonantMismatchPenalty = 1;
+    const vowelConsonantMismatchPenalty = 3;
+    const vowelVowelMismatchPenalty = 1;
+
+    // Create the score matrix
     let matrix = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
     
-    // Initialize the matrix
+    // Initialize the matrix for gaps
     for (let i = 0; i <= m; i++) matrix[i][0] = i * gapPenalty;
     for (let j = 0; j <= n; j++) matrix[0][j] = j * gapPenalty;
     
-    // Fill the matrix
+    // Fill the matrix with scores based on the match/mismatch penalties
     for (let i = 1; i <= m; i++) {
         for (let j = 1; j <= n; j++) {
-            let score = (seq1[i - 1] === seq2[j - 1]) ? matchScore : mismatchPenalty;
+            let score = 0;
+
+            // Check for exact match
+            if (seq1[i - 1] === seq2[j - 1]) {
+                score = exactMatchPenalty;
+            } 
+            // Check for consonant vs consonant or vowel vs vowel mismatch
+            else if (isVowel(seq1[i - 1]) && isVowel(seq2[j - 1])) {
+                score = vowelVowelMismatchPenalty;
+            } 
+            // Check for consonant vs consonant mismatch
+            else if (!isVowel(seq1[i - 1]) && !isVowel(seq2[j - 1])) {
+                score = consonantConsonantMismatchPenalty;
+            } 
+            // Vowel vs consonant mismatch
+            else {
+                score = vowelConsonantMismatchPenalty;
+            }
+
+            // Fill the matrix with the maximum score based on the alignment options
             matrix[i][j] = Math.max(
-                matrix[i - 1][j - 1] + score, // Diagonal (match/mismatch)
+                matrix[i - 1][j - 1] + score,  // Diagonal (match/mismatch)
                 matrix[i - 1][j] + gapPenalty, // Vertical (gap)
                 matrix[i][j - 1] + gapPenalty  // Horizontal (gap)
             );
@@ -47,20 +77,19 @@ function needlemanWunsch(seq1, seq2) {
     return matrix[m][n];
 }
 
-// Example dictionary
-const dictionary = [
-    "apple", "banana", "cherry", "grape", "melon",
-    "orange", "peach", "pear", "plum", "strawberry"
-];
-
 // Handle form submission and comparison
 document.getElementById('wordForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent form from submitting normally
     
     const word = document.getElementById('wordInput').value.toLowerCase(); // Get input word
     
+    if (!window.dictionary) {
+        alert('Please upload a dictionary file first.');
+        return;
+    }
+
     // Compute the distances to all dictionary words
-    const distances = dictionary.map(dictWord => {
+    const distances = window.dictionary.map(dictWord => {
         return {
             word: dictWord,
             distance: needlemanWunsch(word, dictWord)
@@ -80,6 +109,25 @@ document.getElementById('wordForm').addEventListener('submit', function(event) {
         li.textContent = `${item.word} - Distance: ${item.distance}`;
         resultsList.appendChild(li);
     });
+});
+
+// Read file and load dictionary
+document.getElementById('fileInput').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+        
+        // Read the content of the file as text
+        reader.onload = function(e) {
+            const fileContent = e.target.result;
+            // Split the file content into words (assuming each word is on a separate line)
+            window.dictionary = fileContent.split(/\r?\n/).map(word => word.trim().toLowerCase());
+            alert('Dictionary loaded successfully!');
+        };
+
+        reader.readAsText(file);
+    }
 });
 </script>
 
