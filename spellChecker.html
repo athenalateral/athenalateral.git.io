@@ -57,11 +57,12 @@ function needlemanWunsch(seq1, seq2) {
     const m = seq1.length;
     const n = seq2.length;
 
-    const gapPenalty = 2;
+    // Updated gap and mismatch penalties
+    const gapPenalty = 1; // Reduced gap penalty
     const exactMatchPenalty = 0;  // No penalty for exact match
-    const consonantConsonantMismatchPenalty = 1;
-    const vowelConsonantMismatchPenalty = 3;
-    const vowelVowelMismatchPenalty = 1;
+    const consonantConsonantMismatchPenalty = 2;  // Higher penalty for consonant mismatches
+    const vowelConsonantMismatchPenalty = 3;  // Higher penalty for vowel/consonant mismatches
+    const vowelVowelMismatchPenalty = 1;  // Lower penalty for vowel/vowel mismatches
 
     // Create the score matrix
     let matrix = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
@@ -107,6 +108,7 @@ function needlemanWunsch(seq1, seq2) {
 
     return matrix[m][n];  // Return the final score (bottom-right corner of the matrix)
 }
+
 
 document.getElementById('wordForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent form from submitting normally
