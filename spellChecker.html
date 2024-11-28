@@ -1,31 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Find Closest Words</title>
-</head>
-<body>
-
-<h2>Find Closest Words</h2>
-<form id="wordForm">
-    <input type="text" id="wordInput" placeholder="Enter a word" required />
-    <button type="submit">Find Closest Words</button>
-</form>
-
-<h3>Upload Dictionary</h3>
-<input type="file" id="fileInput" />
-
-<h3>Closest Words:</h3>
-<ul id="results"></ul>
-
-<script>
 // Function to check if a character is a vowel
 function isVowel(char) {
     return ['a', 'e', 'i', 'o', 'u'].includes(char.toLowerCase());
 }
 
-// Needleman-Wunsch Algorithm with new penalties
+// Modified Needleman-Wunsch Algorithm with new penalties
 function needlemanWunsch(seq1, seq2) {
     const m = seq1.length;
     const n = seq2.length;
@@ -77,19 +55,20 @@ function needlemanWunsch(seq1, seq2) {
     return matrix[m][n];
 }
 
+// Example dictionary (unchanged)
+const dictionary = [
+    "apple", "banana", "cherry", "grape", "melon",
+    "orange", "peach", "pear", "plum", "strawberry"
+];
+
 // Handle form submission and comparison
 document.getElementById('wordForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent form from submitting normally
     
     const word = document.getElementById('wordInput').value.toLowerCase(); // Get input word
     
-    if (!window.dictionary) {
-        alert('Please upload a dictionary file first.');
-        return;
-    }
-
     // Compute the distances to all dictionary words
-    const distances = window.dictionary.map(dictWord => {
+    const distances = dictionary.map(dictWord => {
         return {
             word: dictWord,
             distance: needlemanWunsch(word, dictWord)
@@ -110,26 +89,3 @@ document.getElementById('wordForm').addEventListener('submit', function(event) {
         resultsList.appendChild(li);
     });
 });
-
-// Read file and load dictionary
-document.getElementById('fileInput').addEventListener('change', function(event) {
-    const file = event.target.files[0];
-
-    if (file) {
-        const reader = new FileReader();
-        
-        // Read the content of the file as text
-        reader.onload = function(e) {
-            const fileContent = e.target.result;
-            // Split the file content into words (assuming each word is on a separate line)
-            window.dictionary = fileContent.split(/\r?\n/).map(word => word.trim().toLowerCase());
-            alert('Dictionary loaded successfully!');
-        };
-
-        reader.readAsText(file);
-    }
-});
-</script>
-
-</body>
-</html>
