@@ -78,7 +78,7 @@ function needlemanWunsch(seq1, seq2) {
 
             // Check for exact match
             if (seq1[i - 1] === seq2[j - 1]) {
-                score = exactMatchPenalty;
+                score = exactMatchPenalty;  // No penalty for exact match
             } 
             // Check for consonant vs consonant or vowel vs vowel mismatch
             else if (isVowel(seq1[i - 1]) && isVowel(seq2[j - 1])) {
@@ -102,6 +102,7 @@ function needlemanWunsch(seq1, seq2) {
         }
     }
 
+    // Return the final score (bottom-right corner of the matrix)
     return matrix[m][n];
 }
 
