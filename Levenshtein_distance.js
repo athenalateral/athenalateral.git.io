@@ -28,7 +28,7 @@ document.getElementById("spell-checker-form").addEventListener("submit", functio
 
       // Display results
       resultElement.innerHTML = `
-        "${inputWord}" is not found in the dictionary. Best matches are:<br>
+        "${inputWord}". Best matches are:<br>
         ${bestMatches.map(match => `${match.word} (Score: ${match.score})`).join("<br>")}
       `;
     })
